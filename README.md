@@ -103,4 +103,4 @@ helm install log-forwarder fluent/fluent-bit \
 ```bash
 helm install event-forwarder deliveryhero/k8s-event-logger \
 -n $NAMESPACE
-```# gcp-log-forwarder
+```
