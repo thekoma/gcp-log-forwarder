@@ -8,7 +8,7 @@ Here's how to create a GCP project, a service account, and assign it the necessa
 **1. Create a GCP Project**
 
 ```bash
-PROJECT_ID=loggin
+PROJECT_ID=logging-project-1234567
 gcloud projects create $PROJECT_ID --set-as-default
 ```
 
