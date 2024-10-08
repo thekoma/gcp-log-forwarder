@@ -1,140 +1,12 @@
 kind: DaemonSet
-
 replicaCount: 1
 
 image:
   repository: cr.fluentbit.io/fluent/fluent-bit
-  tag: "3.0.1"
-  pullPolicy: Always
-
-testFramework:
-  enabled: true
-  image:
-    repository: busybox
-    pullPolicy: Always
-    tag: latest
-hostNetwork: false
-dnsPolicy: ClusterFirst
-service:
-  type: ClusterIP
-  port: 2020
-  loadBalancerClass:
-  loadBalancerSourceRanges: []
-  labels: {}
-serviceMonitor:
-  enabled: false
-
-prometheusRule:
-  enabled: false
-
-dashboards:
-  enabled: false
-  labelKey: grafana_dashboard
-  annotations: {}
-  namespace: ""
-
-lifecycle: {}
-
-livenessProbe:
-  httpGet:
-    path: /
-    port: http
-
-readinessProbe:
-  httpGet:
-    path: /api/v1/health
-    port: http
-
-resources: {}
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts: []
-  extraHosts: []
-  tls: []
-
-autoscaling:
-  vpa:
-    enabled: false
-    annotations: {}
-    controlledResources: []
-    maxAllowed: {}
-    minAllowed: {}
-
-    updatePolicy:
-      updateMode: Auto
-
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 75
-  customRules: []
-  behavior: {}
-podDisruptionBudget:
-  enabled: false
-  annotations: {}
-  maxUnavailable: "30%"
-
-nodeSelector: {}
-
-tolerations:
-  - key: "node-role.kubernetes.io/control-plane"
-    operator: "Exists"
-    effect: "NoSchedule"
-
-affinity: {}
-
-labels: {}
-
-annotations: {}
-
-podAnnotations: {}
-
-podLabels: {}
-
-minReadySeconds:
-
-terminationGracePeriodSeconds:
-
-priorityClassName: ""
-
-env: []
-envWithTpl: []
-
-envFrom: []
-
-extraContainers: []
-
-flush: 1
-
-metricsPort: 2020
-
-extraPorts: []
-
-extraVolumes: []
-
-extraVolumeMounts: []
-
-updateStrategy: {}
-existingConfigMap: ""
-
-networkPolicy:
-  enabled: false
-
-luaScripts: {}
+  tag: latest
+  # tag: latest-debug # USe this if you need a shell in the container to debug.
 
 config:
-  inputs: |
-    [INPUT]
-        Name tail
-        Path /var/log/containers/*.log
-        multiline.parser docker, cri
-        Tag kube.*
-        Mem_Buf_Limit 5MB
-        Skip_Long_Lines On
-
   outputs: |
     [OUTPUT]
         Name        stackdriver
@@ -157,16 +29,6 @@ config:
         google_service_credentials /var/run/google-service-credentials/key.json
         Retry_Limit 5
         workers 1
-
-  extraFiles: {}
-
-volumeMounts:
-  - name: config
-    mountPath: /fluent-bit/etc/fluent-bit.conf
-    subPath: fluent-bit.conf
-  - name: config
-    mountPath: /fluent-bit/etc/custom_parsers.conf
-    subPath: custom_parsers.conf
 
 daemonSetVolumes:
   - name: varlog
@@ -196,10 +58,5 @@ daemonSetVolumeMounts:
   - name: google-service-credentials
     mountPath: "/var/run/google-service-credentials"
     readOnly: true
-args: []
 
-command: []
-
-initContainers: []
-
-logLevel: info
+logLevel: info # set to debug to... debug
